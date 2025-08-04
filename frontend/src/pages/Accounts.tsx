@@ -72,7 +72,7 @@ export default function Accounts() {
     if (!newAccount.name || !newAccount.balance || !newAccount.institution) return
 
     const account: Account = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       name: newAccount.name,
       type: newAccount.type,
       balance: Number.parseFloat(newAccount.balance),
