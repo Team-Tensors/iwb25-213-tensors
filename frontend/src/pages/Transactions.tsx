@@ -97,7 +97,7 @@ export default function Transactions() {
     if (!newTransaction.description || !newTransaction.amount) return
 
     const transaction: Transaction = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       date: newTransaction.date,
       description: newTransaction.description,
       category: newTransaction.category,
