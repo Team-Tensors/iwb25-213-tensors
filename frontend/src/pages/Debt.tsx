@@ -87,7 +87,7 @@ export default function DebtsPage() {
       return
 
     const debt: Debt = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       name: newDebt.name,
       type: newDebt.type,
       currentBalance: Number.parseFloat(newDebt.currentBalance),
