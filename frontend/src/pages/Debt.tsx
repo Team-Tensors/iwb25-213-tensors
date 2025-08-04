@@ -141,7 +141,7 @@ export default function DebtsPage() {
 
   const calculatePayoffTime = (balance: number, payment: number, rate: number) => {
     if (payment <= 0) return "Never (no payment)"
-    if (payment <= (balance * rate) / 100 / 12) return "Never (payment too low)"
+    if (payment <= 0 || payment <= (balance * rate) / 100 / 12) return "Never (payment too low)"
     const monthlyRate = rate / 100 / 12
     const months = Math.ceil(Math.log(1 + (balance * monthlyRate) / payment) / Math.log(1 + monthlyRate))
     const years = Math.floor(months / 12)
