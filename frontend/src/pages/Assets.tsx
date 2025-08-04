@@ -75,7 +75,7 @@ export default function Assets() {
     if (!newAsset.name || !newAsset.currentValue || !newAsset.purchasePrice || !newAsset.purchaseDate) return
 
     const asset: Asset = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       name: newAsset.name,
       type: newAsset.type,
       currentValue: Number.parseFloat(newAsset.currentValue),
