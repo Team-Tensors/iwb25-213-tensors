@@ -131,7 +131,7 @@ export default function AnalyticsCharts({ spendingTrends, categoryBreakdown }: A
                   paddingAngle={2}
                   dataKey="amount"
                 >
-                  {categoryBreakdown.map((entry, index) => (
+                  {categoryBreakdown.map((_entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>

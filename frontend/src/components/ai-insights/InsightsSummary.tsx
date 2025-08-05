@@ -24,20 +24,6 @@ export default function InsightsSummary({ insights }: InsightsSummaryProps) {
     : 0
   const totalInsights = insights.length
 
-  const getInsightTypeIcon = (type: string) => {
-    switch (type) {
-      case "recommendation":
-        return <TrendingUp className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-      case "warning":
-        return <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
-      case "goal":
-        return <Target className="h-6 w-6 text-green-600 dark:text-green-400" />
-      case "trend":
-        return <DollarSign className="h-6 w-6 text-purple-600 dark:text-purple-400" />
-      default:
-        return <TrendingUp className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-    }
-  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
