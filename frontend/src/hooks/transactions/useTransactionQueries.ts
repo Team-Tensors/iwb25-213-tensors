@@ -1,12 +1,12 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { authService } from '../../services/authService';
-import { transactionService } from '../../services/TransactionService';
+import { transactionService } from '../../services/transactionService';
 import type { 
   TransactionWithDetails,
   ApiResponse,
   PaginatedResponse
 } from '../../services/api';
-import type { TransactionParams } from '../../services/TransactionService';
+import type { TransactionParams } from '../../services/transactionService';
 
 /**
  * Hook for fetching paginated transactions with optional filters
