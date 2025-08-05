@@ -25,7 +25,7 @@ interface ListItem {
   progress?: number
 }
 
-interface List03Props {
+interface FinancialGoalsListProps {
   items?: ListItem[]
   className?: string
 }
@@ -90,7 +90,7 @@ const ITEMS: ListItem[] = [
   },
 ]
 
-export default function List03({ items = ITEMS, className }: List03Props) {
+export default function FinancialGoalsList({ items = ITEMS, className }: FinancialGoalsListProps) {
   return (
     <div className={cn("w-full overflow-x-auto scrollbar-none", className)}>
       <div className="flex gap-3 min-w-full p-1">

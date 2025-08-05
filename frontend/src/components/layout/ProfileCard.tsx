@@ -15,7 +15,7 @@ interface MenuItem {
   external?: boolean
 }
 
-interface Profile01Props {
+interface ProfileCardProps {
   name: string
   role: string
   avatar: string
@@ -28,14 +28,14 @@ const defaultProfile = {
   avatar:
     "https://ferf1mheo22r9ira.public.blob.vercel-storage.com/avatar-02-albo9B0tWOSLXCVZh9rX9KFxXIVWMr.png",
   subscription: "Free Trial",
-} satisfies Required<Profile01Props>
+} satisfies Required<ProfileCardProps>
 
-export default function Profile01({
+export default function ProfileCard({
   name = defaultProfile.name,
   role = defaultProfile.role,
   avatar = defaultProfile.avatar,
   subscription = defaultProfile.subscription,
-}: Partial<Profile01Props> = defaultProfile) {
+}: Partial<ProfileCardProps> = defaultProfile) {
   const menuItems: MenuItem[] = [
     {
       label: "Subscription",

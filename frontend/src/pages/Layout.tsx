@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-import Sidebar from "../components/sidebar"
-import TopNav from "../components/top-nav"
-import AIAssistantPanel from "../components/ai-assistant-panel"
+import Sidebar from "../components/layout/Sidebar"
+import TopNav from "../components/layout/TopNav"
+import AIAssistantPanel from "../components/layout/AiAssistantPanel"
 import { useTheme } from "@/context/ThemeContext"
 import { Outlet } from "react-router-dom"
 

@@ -9,7 +9,7 @@ interface AccountItem {
   type: "savings" | "checking" | "investment" | "debt"
 }
 
-interface List01Props {
+interface AccountsListProps {
   totalBalance?: string
   accounts?: AccountItem[]
   className?: string
@@ -53,7 +53,7 @@ const ACCOUNTS: AccountItem[] = [
   },
 ]
 
-export default function List01({ totalBalance = "$26,540.25", accounts = ACCOUNTS, className }: List01Props) {
+export default function AccountsList({ totalBalance = "$26,540.25", accounts = ACCOUNTS, className }: AccountsListProps) {
   return (
     <div
       className={cn(

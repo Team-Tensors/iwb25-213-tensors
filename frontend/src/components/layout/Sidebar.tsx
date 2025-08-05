@@ -1,4 +1,3 @@
-// Sidebar.tsx
 import React, { useState } from "react"
 import { BarChart2, Receipt, Building2, CreditCard, Wallet, Settings, HelpCircle, Menu, X, ChevronLeft, ChevronRight, Home, } from "lucide-react"
 import { Link, useLocation } from "react-router-dom"

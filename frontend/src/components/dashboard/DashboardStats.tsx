@@ -1,7 +1,4 @@
-"use client"
-
 import type React from "react"
-
 import { TrendingUp, TrendingDown, DollarSign, PiggyBank } from "lucide-react"
 import { cn } from "@/lib/utils"
 

@@ -1,10 +1,55 @@
-import { useState } from "react"
-import { Plus, Edit, Trash2, TrendingUp, TrendingDown } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Search, Filter } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import AccountsSummary from "@/components/accounts/AccountsSummary"
+import AccountsTable from "@/components/accounts/AccountsTable"
+import AddAccountDialog from "@/components/accounts/AddAccountDialog"
+
+// Mock data - in a real app, this would come from an API
+const mockAccounts = [
+  {
+    id: "1",
+    name: "Primary Checking",
+    type: "checking" as const,
+    balance: 5250.75,
+    currency: "USD",
+    institution: "Chase Bank",
+    lastUpdated: "2025-01-05T10:30:00Z"
+  },
+  {
+    id: "2",
+    name: "High Yield Savings",
+    type: "savings" as const,
+    balance: 15430.20,
+    currency: "USD",
+    interestRate: 4.5,
+    institution: "Marcus by Goldman Sachs",
+    lastUpdated: "2025-01-05T09:15:00Z"
+  },
+  {
+    id: "3",
+    name: "Investment Portfolio",
+    type: "investment" as const,
+    balance: 42850.90,
+    currency: "USD",
+    interestRate: 7.2,
+    institution: "Vanguard",
+    lastUpdated: "2025-01-04T16:45:00Z"
+  },
+  {
+    id: "4",
+    name: "Credit Card",
+    type: "credit" as const,
+    balance: -2150.30,
+    currency: "USD",
+    interestRate: 18.9,
+    institution: "Capital One",
+    lastUpdated: "2025-01-05T08:20:00Z"
+  }
+]
 
 interface Account {
   id: string
@@ -18,290 +63,162 @@ interface Account {
 }
 
 export default function Accounts() {
-  const [accounts, setAccounts] = useState<Account[]>([
-    {
-      id: "1",
-      name: "Main Checking",
-      type: "checking",
-      balance: 2850.0,
-      currency: "USD",
-      institution: "Chase Bank",
-      lastUpdated: "2024-01-15",
-    },
-    {
-      id: "2",
-      name: "Emergency Savings",
-      type: "savings",
-      balance: 15000.0,
-      currency: "USD",
-      interestRate: 4.5,
-      institution: "Ally Bank",
-      lastUpdated: "2024-01-15",
-    },
-    {
-      id: "3",
-      name: "Investment Portfolio",
-      type: "investment",
-      balance: 45230.8,
-      currency: "USD",
-      institution: "Fidelity",
-      lastUpdated: "2024-01-15",
-    },
-    {
-      id: "4",
-      name: "Credit Card",
-      type: "credit",
-      balance: -1200.0,
-      currency: "USD",
-      institution: "Capital One",
-      lastUpdated: "2024-01-15",
-    },
-  ])
+  const [accounts, setAccounts] = useState<Account[]>(mockAccounts)
+  const [filteredAccounts, setFilteredAccounts] = useState<Account[]>(mockAccounts)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [filterType, setFilterType] = useState<string>("all")
 
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
-  const [newAccount, setNewAccount] = useState({
-    name: "",
-    type: "checking" as "checking" | "savings" | "investment" | "credit",
-    balance: "",
-    currency: "USD",
-    interestRate: "",
-    institution: "",
-  })
+  // Filter accounts based on search term and type filter
+  useEffect(() => {
+    let filtered = accounts
 
-  const handleAddAccount = () => {
-    if (!newAccount.name || !newAccount.balance || !newAccount.institution) return
-
-    const account: Account = {
-      id: crypto.randomUUID(),
-      name: newAccount.name,
-      type: newAccount.type,
-      balance: Number.parseFloat(newAccount.balance),
-      currency: newAccount.currency,
-      interestRate: newAccount.interestRate ? Number.parseFloat(newAccount.interestRate) : undefined,
-      institution: newAccount.institution,
-      lastUpdated: new Date().toISOString().split("T")[0],
+    // Filter by search term
+    if (searchTerm) {
+      filtered = filtered.filter(
+        (account) =>
+          account.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          account.institution.toLowerCase().includes(searchTerm.toLowerCase())
+      )
     }
 
-    setAccounts([...accounts, account])
-    setNewAccount({
-      name: "",
-      type: "checking",
-      balance: "",
-      currency: "USD",
-      interestRate: "",
-      institution: "",
-    })
-    setIsAddDialogOpen(false)
+    // Filter by account type
+    if (filterType !== "all") {
+      filtered = filtered.filter((account) => account.type === filterType)
+    }
+
+    setFilteredAccounts(filtered)
+  }, [accounts, searchTerm, filterType])
+
+  const handleAddAccount = (newAccountData: Omit<Account, "id" | "lastUpdated">) => {
+    const newAccount: Account = {
+      ...newAccountData,
+      id: Date.now().toString(),
+      balance: parseFloat(newAccountData.balance.toString()),
+      lastUpdated: new Date().toISOString()
+    }
+    setAccounts([...accounts, newAccount])
   }
 
-  const totalAssets = accounts.filter((a) => a.balance > 0).reduce((sum, a) => sum + a.balance, 0)
-  const totalLiabilities = accounts.filter((a) => a.balance < 0).reduce((sum, a) => sum + Math.abs(a.balance), 0)
-  const netWorth = totalAssets - totalLiabilities
+  const handleEditAccount = (account: Account) => {
+    // In a real app, this would open an edit dialog
+    console.log("Edit account:", account)
+    // For now, we'll just log it
+  }
 
-  const getAccountIcon = (type: string) => {
-    switch (type) {
-      case "checking":
-        return "💳"
-      case "savings":
-        return "🏦"
-      case "investment":
-        return "📈"
-      case "credit":
-        return "💸"
-      default:
-        return "💰"
+  const handleDeleteAccount = (accountId: string) => {
+    if (confirm("Are you sure you want to delete this account?")) {
+      setAccounts(accounts.filter((account) => account.id !== accountId))
     }
   }
 
   return (
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Accounts</h1>
-            <p className="text-gray-600 dark:text-gray-400">Manage your bank accounts, investments, and credit cards</p>
-          </div>
-          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="bg-blue-600 hover:bg-blue-700">
-                <Plus className="w-4 h-4 mr-2" />
-                Add Account
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>Add New Account</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="name">Account Name</Label>
-                  <Input
-                    id="name"
-                    value={newAccount.name}
-                    onChange={(e) => setNewAccount({ ...newAccount, name: e.target.value })}
-                    placeholder="Enter account name"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="type">Account Type</Label>
-                    <Select
-                      value={newAccount.type}
-                      onValueChange={(value: "checking" | "savings" | "investment" | "credit") =>
-                        setNewAccount({ ...newAccount, type: value })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="checking">Checking</SelectItem>
-                        <SelectItem value="savings">Savings</SelectItem>
-                        <SelectItem value="investment">Investment</SelectItem>
-                        <SelectItem value="credit">Credit Card</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="balance">Current Balance</Label>
-                    <Input
-                      id="balance"
-                      type="number"
-                      step="0.01"
-                      value={newAccount.balance}
-                      onChange={(e) => setNewAccount({ ...newAccount, balance: e.target.value })}
-                      placeholder="0.00"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Label htmlFor="institution">Institution</Label>
-                  <Input
-                    id="institution"
-                    value={newAccount.institution}
-                    onChange={(e) => setNewAccount({ ...newAccount, institution: e.target.value })}
-                    placeholder="Bank or institution name"
-                  />
-                </div>
-                {(newAccount.type === "savings" || newAccount.type === "investment") && (
-                  <div>
-                    <Label htmlFor="interestRate">Interest Rate (%)</Label>
-                    <Input
-                      id="interestRate"
-                      type="number"
-                      step="0.01"
-                      value={newAccount.interestRate}
-                      onChange={(e) => setNewAccount({ ...newAccount, interestRate: e.target.value })}
-                      placeholder="0.00"
-                    />
-                  </div>
-                )}
-                <Button onClick={handleAddAccount} className="w-full bg-blue-600 hover:bg-blue-700">
-                  Add Account
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
+    <div className="container mx-auto p-6 space-y-8">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            Accounts
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">
+            Manage your financial accounts and track your balances
+          </p>
         </div>
-
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
-          <div className="bg-white dark:bg-[#0F0F12] rounded-xl p-4 sm:p-6 border border-gray-200 dark:border-[#1F1F23]">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Assets</h3>
-                <p className="text-2xl font-bold text-green-600 dark:text-green-400">${totalAssets.toLocaleString()}</p>
-              </div>
-              <TrendingUp className="w-8 h-8 text-green-600 dark:text-green-400" />
-            </div>
-          </div>
-          <div className="bg-white dark:bg-[#0F0F12] rounded-xl p-4 sm:p-6 border border-gray-200 dark:border-[#1F1F23]">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Liabilities</h3>
-                <p className="text-2xl font-bold text-red-600 dark:text-red-400">
-                  ${totalLiabilities.toLocaleString()}
-                </p>
-              </div>
-              <TrendingDown className="w-8 h-8 text-red-600 dark:text-red-400" />
-            </div>
-          </div>
-          <div className="bg-white dark:bg-[#0F0F12] rounded-xl p-4 sm:p-6 border border-gray-200 dark:border-[#1F1F23]">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">Net Worth</h3>
-                <p
-                  className={`text-2xl font-bold ${netWorth >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}
-                >
-                  ${netWorth.toLocaleString()}
-                </p>
-              </div>
-              {netWorth >= 0 ? (
-                <TrendingUp className="w-8 h-8 text-green-600 dark:text-green-400" />
-              ) : (
-                <TrendingDown className="w-8 h-8 text-red-600 dark:text-red-400" />
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Accounts Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
-          {accounts.map((account) => (
-            <div
-              key={account.id}
-              className="bg-white dark:bg-[#0F0F12] rounded-xl p-4 sm:p-6 border border-gray-200 dark:border-[#1F1F23]"
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center space-x-3">
-                  <span className="text-2xl">{getAccountIcon(account.type)}</span>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 dark:text-white">{account.name}</h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 capitalize">{account.type}</p>
-                  </div>
-                </div>
-                <div className="flex space-x-2">
-                  <button className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
-                    <Edit className="w-4 h-4" />
-                  </button>
-                  <button className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Balance</p>
-                  <p
-                    className={`text-xl font-bold ${account.balance >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}
-                  >
-                    ${Math.abs(account.balance).toLocaleString()}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Institution</p>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">{account.institution}</p>
-                </div>
-
-                {account.interestRate && (
-                  <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Interest Rate</p>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">{account.interestRate}%</p>
-                  </div>
-                )}
-
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Last Updated</p>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
-                    {new Date(account.lastUpdated).toLocaleDateString()}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <AddAccountDialog onAddAccount={handleAddAccount} />
       </div>
+
+      {/* Summary Cards */}
+      <AccountsSummary accounts={accounts} />
+
+      {/* Filters and Search */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Filter className="h-5 w-5" />
+            Filter Accounts
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex flex-col sm:flex-row gap-4">
+            {/* Search Input */}
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                placeholder="Search accounts or institutions..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            
+            {/* Type Filter */}
+            <Select value={filterType} onValueChange={setFilterType}>
+              <SelectTrigger className="w-full sm:w-48">
+                <SelectValue placeholder="Filter by type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Accounts</SelectItem>
+                <SelectItem value="checking">Checking</SelectItem>
+                <SelectItem value="savings">Savings</SelectItem>
+                <SelectItem value="investment">Investment</SelectItem>
+                <SelectItem value="credit">Credit</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          {/* Results count */}
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Showing {filteredAccounts.length} of {accounts.length} accounts
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* Accounts Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Account Details</CardTitle>
+        </CardHeader>
+        <CardContent className="p-0">
+          {filteredAccounts.length > 0 ? (
+            <AccountsTable
+              accounts={filteredAccounts}
+              onEditAccount={handleEditAccount}
+              onDeleteAccount={handleDeleteAccount}
+            />
+          ) : (
+            <div className="p-8 text-center">
+              <p className="text-gray-500 dark:text-gray-400 mb-4">
+                No accounts found matching your criteria
+              </p>
+              <Button
+                onClick={() => {
+                  setSearchTerm("")
+                  setFilterType("all")
+                }}
+                variant="outline"
+              >
+                Clear Filters
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Additional Info */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
+            <p>
+              💡 <strong>Tip:</strong> Keep your accounts updated regularly to maintain accurate financial tracking.
+            </p>
+            <p>
+              🔒 <strong>Security:</strong> Your account data is encrypted and securely stored.
+            </p>
+            <p>
+              📊 <strong>Analytics:</strong> View detailed insights and trends in the Dashboard section.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   )
 }

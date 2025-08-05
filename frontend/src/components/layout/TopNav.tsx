@@ -3,8 +3,8 @@ import {
   ChevronRight,
 } from "lucide-react"
 import { Link } from "react-router-dom"
-import Profile01 from "./profile-01"
-import { ThemeToggle } from "./theme-toggle"
+import ProfileCard from "./ProfileCard"
+import { ThemeToggle } from "./ThemeToggle"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -74,7 +74,7 @@ export default function TopNav() {
             sideOffset={8}
             className="w-[280px] sm:w-80 bg-background border-border rounded-lg shadow-lg"
           >
-            <Profile01 avatar="https://ferf1mheo22r9ira.public.blob.vercel-storage.com/avatar-01-n0x8HFv8EUetf9z6ht0wScJKoTHqf8.png" />
+            <ProfileCard avatar="https://ferf1mheo22r9ira.public.blob.vercel-storage.com/avatar-01-n0x8HFv8EUetf9z6ht0wScJKoTHqf8.png" />
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

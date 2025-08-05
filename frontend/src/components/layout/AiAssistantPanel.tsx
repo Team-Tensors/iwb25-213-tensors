@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useRef, useEffect } from "react"
 import { Send, Bot, User, Minimize2, Maximize2 } from "lucide-react"
 import { cn } from "@/lib/utils"

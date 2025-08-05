@@ -20,16 +20,9 @@ interface Transaction {
   status: "completed" | "pending" | "failed"
 }
 
-interface List02Props {
+interface TransactionsListProps {
   transactions?: Transaction[]
   className?: string
-}
-
-const categoryStyles = {
-  shopping: "bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100",
-  food: "bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100",
-  transport: "bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100",
-  entertainment: "bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100",
 }
 
 const TRANSACTIONS: Transaction[] = [
@@ -95,7 +88,7 @@ const TRANSACTIONS: Transaction[] = [
   },
 ]
 
-export default function List02({ transactions = TRANSACTIONS, className }: List02Props) {
+export default function TransactionsList({ transactions = TRANSACTIONS, className }: TransactionsListProps) {
   return (
     <div
       className={cn(

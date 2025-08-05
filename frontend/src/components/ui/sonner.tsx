@@ -1,5 +1,3 @@
-"use client"
-
 import { useTheme } from "@/context/ThemeContext"
 import { Toaster as Sonner } from "sonner"
 
