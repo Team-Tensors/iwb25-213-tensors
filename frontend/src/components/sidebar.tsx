@@ -110,7 +110,7 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
         <div className="px-3 py-4 border-t border-gray-200 dark:border-[#1F1F23] flex-shrink-0">
           <div className="space-y-1">
             <NavItem to="/settings" icon={Settings}>
-              Settings
+              Settingssssss
             </NavItem>
             <NavItem to="/help" icon={HelpCircle}>
               Help
