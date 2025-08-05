@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query';
-import { transactionService } from '../../services/transactionService';
+import { transactionService } from '../../services/TransactionService';
 import type { 
   Transaction,
   ApiResponse

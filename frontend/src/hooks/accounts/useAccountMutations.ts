@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query';
-import { accountService } from '../../services/accountService';
+import { accountService } from '../../services/AccountService';
 import type { 
   Account,
   ApiResponse
